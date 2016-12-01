@@ -1,0 +1,9 @@
+{
+  "name": "advent-of-code",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/mackbrowne/advent-of-code",
+  "author": "Mackenzie Browne <mackbrowne@gmail.com>",
+  "license": "MIT",
+  "dependencies": {}
+}
