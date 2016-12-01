@@ -2,29 +2,53 @@ var fs = require('fs');
 var parse = require('csv-parse');
 
 let position = {x: 0, y:0};
+let rawPositions = [];
+let crossedPoints = [];
 
 var parser = parse({delimiter: ', '}, function(err, data){
   let inputData = data[0].forEach((item)=>{
       addToDistance(calcDir(item.charAt(0)), parseInt(item.substring(1)) );
   });
-  console.log("Answer 1a: Santa is " + ( Math.abs(position.x) + Math.abs(position.y) ) + " blocks away.");
+  console.log("Answer 1a - Santa is: " + ( Math.abs(position.x) + Math.abs(position.y) ) + " blocks away.");
+  console.log("Answer 1b - Santa first re-visits twice point: " + ( Math.abs(crossedPoints[0].x) + Math.abs(crossedPoints[0].y) ) + " blocks away.");
 });
 
 function addToDistance(direction, distance){
   switch(direction){
     case "N":
-      position.y += distance;
+      for(var x=0; x<distance; x++){
+        position.y++;
+        checkForCrossed();
+      }
       break;
     case "E":
-      position.x += distance;
+      for(var x=0; x<distance; x++){
+        position.x++;
+        checkForCrossed();
+      }
       break;
     case "S":
-      position.y -= distance;
+      for(var x=0; x<distance; x++){
+        position.y--;
+        checkForCrossed();
+      }
       break;
     case "W":
-      position.x -= distance;
+      for(var x=0; x<distance; x++){
+        position.x--;
+        checkForCrossed();
+      }
       break;
   }
+}
+
+function checkForCrossed(){
+  rawPositions.forEach((pastPosition)=>{
+    if(pastPosition.x === position.x && pastPosition.y === position.y){
+      crossedPoints.push({x: position.x, y: position.y});
+    }
+  });
+  rawPositions.push({x: position.x, y: position.y})
 }
 
 let lastDir = 'N';
