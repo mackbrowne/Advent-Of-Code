@@ -22,7 +22,7 @@ function part1() {
 function part2() {
   console.log('Part 2');
   let counter = 0;
-  let finalPassword = ['x', 'x', 'x', 'x', 'x', 'x', 'x', 'x'];
+  let finalPassword = Array(8).fill('x');
   while (finalPassword.indexOf('x') > -1) {
     let md5Code = md5(INPUT_CODE + counter);
     if (md5Code.substring(0, 5) === '00000') {
