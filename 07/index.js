@@ -16,12 +16,42 @@ const getInput = () => {
 };
 
 const buildTree = (treeList) => {
-  let tree = treeList.pop();
-  do {
-    // find all children from treeList
-    // once all the children have been recursively populated
-    // find top element in treelist children's
-  } while(treeList.length > 0);
+  
+  const findAndPopulate = treeName => {
+    const listIndex = treeList.findIndex(listItem => listItem.name === treeName);
+    const tree = treeList.splice(listIndex, 1).pop();
+    if(tree.children){
+      tree.children = tree.children.map( child => {
+        //find child in treeList
+        if(typeof child === 'string'){
+          child = findAndPopulate(child);
+        }
+        return child;
+      });
+    }
+    return tree;
+  };
+
+  const findParent = treeName => {
+    const parentIndex = treeList.findIndex(listItem => {
+      let foundParent = false;
+      if(listItem.children) listItem.children.forEach(child => {
+        if(treeName === child){
+          foundParent = true;
+        }
+      });
+      return foundParent;
+    });
+
+    return findAndPopulate(treeList[parentIndex].name);
+  };
+
+  let builtTree = findAndPopulate(treeList[0].name);
+  while(treeList.length > 0){
+    treeList.push(builtTree);
+    builtTree = findParent(builtTree.name);
+  }
+  return builtTree;
 }
 
-console.log(getInput());
+console.log(buildTree(getInput()))
