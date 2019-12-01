@@ -1,6 +1,7 @@
 {
   "name": "advent-of-code",
-  "version": "1.0.0",
+  "version": "2.0.19",
+  "type": "module",
   "main": "index.js",
   "repository": "https://github.com/mackbrowne/advent-of-code",
   "author": "Mackenzie Browne <mackbrowne@gmail.com>",
