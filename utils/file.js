@@ -1,14 +1,14 @@
 const fs = require('fs');
 
-const readLines = inputFile =>
+const readFile = (inputFile, delimiter) =>
   fs
     .readFileSync(inputFile)
     .toString()
-    .split('\n');
+    .split(delimiter);
 
-const readNumbers = inputFile => readLines(inputFile).map(Number);
+const readNumbers = (inputFile, delimiter) => readFile(inputFile, delimiter).map(Number);
 
 module.exports = {
-  readLines,
+  readFile,
   readNumbers,
 };
