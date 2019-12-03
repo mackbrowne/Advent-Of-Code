@@ -1,7 +1,7 @@
-const { readNumbers } = require(`${__dirname}/../utils/file`);
+const { parseNumbers } = require(`${__dirname}/../utils/file`);
 const { test, endTest } = require(`${__dirname}/../utils/test`);
 
-const inputNumbers = readNumbers(`${__dirname}/input.txt`, ',');
+const inputNumbers = parseNumbers(`${__dirname}/input.txt`, ',');
 
 const opCodes = {
   99: 'STOP', // DONE

@@ -6,9 +6,13 @@ const readFile = (inputFile, delimiter) =>
     .toString()
     .split(delimiter);
 
-const readNumbers = (inputFile, delimiter) => readFile(inputFile, delimiter).map(Number);
+const parseItems = (inputFile, delimiter, parser) => readFile(inputFile,delimiter).map(parser);
+
+const parseNumbers = (inputFile, delimiter) =>
+  parseItems(inputFile, delimiter, Number);
 
 module.exports = {
   readFile,
-  readNumbers,
+  parseItems,
+  parseNumbers
 };

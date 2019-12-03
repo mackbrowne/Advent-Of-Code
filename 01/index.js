@@ -1,8 +1,8 @@
-const { readNumbers } = require(`${__dirname}/../utils/file`);
+const { parseNumbers } = require(`${__dirname}/../utils/file`);
 const { test, endTest } = require(`${__dirname}/../utils/test`);
 const { sumReducer } = require(`${__dirname}/../utils/reducers`);
 
-const inputNumbers = readNumbers(`${__dirname}/input.txt`, '\n');
+const inputNumbers = parseNumbers(`${__dirname}/input.txt`, '\n');
 
 /*  Specifically, to find the fuel required for a module, take its mass, 
     divide by three, round down, and subtract 2. */
