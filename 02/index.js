@@ -1,8 +1,8 @@
 const { parseNumbers } = require(`${__dirname}/../utils/file`);
 const { test, endTest } = require(`${__dirname}/../utils/test`);
-const { runSequence } = require(`${__dirname}/../utils/shipComputer`);
+const { runSequence } = require(`${__dirname}/../utils/oldComputer`);
 
-const inputNumbers = parseNumbers(`${__dirname}/input.txt`, ',');
+const inputNumbers = () => parseNumbers(`${__dirname}/input.txt`, ',');
 
 const shipComputer = (original, noun, verb) => {
   const input = [...original];
@@ -36,10 +36,10 @@ const findNumber = (input, expected) => {
   return 100 * noun + verb;
 };
 
-test(shipComputer(inputNumbers, 12, 2)[0], 4330636)
-test(shipComputer(inputNumbers, 60, 86)[0], 19690720);
+test(shipComputer(inputNumbers(), 12, 2)[0], 4330636)
+test(shipComputer(inputNumbers(), 60, 86)[0], 19690720);
 endTest();
 
 
-console.log(`PART 1 - ${shipComputer(inputNumbers, 12, 2)[0]}`);
-console.log(`PART 2 - ${findNumber(inputNumbers, 19690720)}`);
+console.log(`PART 1 - ${shipComputer(inputNumbers(), 12, 2)[0]}`);
+console.log(`PART 2 - ${findNumber(inputNumbers(), 19690720)}`);
