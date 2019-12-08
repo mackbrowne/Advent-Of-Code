@@ -1,11 +1,20 @@
-const runSequence = (memory, inputs) => {
-  const IMMEDIATE = 1;
+class ShipComputer {
+  input = {};
+  memory = [];
 
-  const getParameter = ({ memory, mode, parameter }) => {
+  constructor(input, memory) {
+    this.input = input;
+    this.memory = memory;
+  }
+}
+
+runSequence = (memory, inputs) => {
+  IMMEDIATE = 1;
+  getParameter = ({ memory, mode, parameter }) => {
     return mode === IMMEDIATE ? parameter : memory[parameter];
   };
 
-  const addValues = ({ memory, position, mode1, mode2 }) => {
+  addValues = ({ memory, position, mode1, mode2 }) => {
     const parameter1 = getParameter({
       memory,
       mode: mode1,
@@ -21,7 +30,7 @@ const runSequence = (memory, inputs) => {
     return position + 4;
   };
 
-  const multiplyValues = ({ memory, position, mode1, mode2 }) => {
+  multiplyValues = ({ memory, position, mode1, mode2 }) => {
     const parameter1 = getParameter({
       memory,
       mode: mode1,
@@ -37,15 +46,15 @@ const runSequence = (memory, inputs) => {
     return position + 4;
   };
 
-  let firstInput = true;
-  const saveInputToPosition = ({ memory, position, inputs }) => {
+  firstInput = true;
+  saveInputToPosition = ({ memory, position, inputs }) => {
     const parameter1 = memory[position + 1];
     memory[parameter1] = inputs[firstInput ? 0 : 1];
     firstInput = false;
     return position + 2;
   };
 
-  const outputValue = ({ memory, position, outputs, mode1 }) => {
+  outputValue = ({ memory, position, outputs, mode1 }) => {
     const parameter1 = getParameter({
       memory,
       mode: mode1,
@@ -55,7 +64,7 @@ const runSequence = (memory, inputs) => {
     return position + 2;
   };
 
-  const jumpIfTrue = ({ memory, position, mode1, mode2 }) => {
+  jumpIfTrue = ({ memory, position, mode1, mode2 }) => {
     const parameter1 = getParameter({
       memory,
       mode: mode1,
@@ -72,7 +81,7 @@ const runSequence = (memory, inputs) => {
     return position + 3;
   };
 
-  const jumpIfFalse = ({ memory, position, mode1, mode2 }) => {
+  jumpIfFalse = ({ memory, position, mode1, mode2 }) => {
     const parameter1 = getParameter({
       memory,
       mode: mode1,
@@ -89,7 +98,7 @@ const runSequence = (memory, inputs) => {
     return position + 3;
   };
 
-  const lessThan = ({ memory, position, mode1, mode2, mode3 }) => {
+  lessThan = ({ memory, position, mode1, mode2, mode3 }) => {
     const parameter1 = getParameter({
       memory,
       mode: mode1,
@@ -109,7 +118,7 @@ const runSequence = (memory, inputs) => {
     return position + 4;
   };
 
-  const equals = ({ memory, position, mode1, mode2 }) => {
+  equals = ({ memory, position, mode1, mode2 }) => {
     const parameter1 = getParameter({
       memory,
       mode: mode1,
@@ -129,12 +138,12 @@ const runSequence = (memory, inputs) => {
     return position + 4;
   };
 
-  const endProgram = ({ memory, position }) => {
+  endProgram = ({ memory, position }) => {
     // report('Reached the end of the program at position', position)
     return -1;
   };
 
-  const opcodes = {
+  opcodes = {
     1: addValues,
     2: multiplyValues,
     3: saveInputToPosition,
@@ -146,7 +155,7 @@ const runSequence = (memory, inputs) => {
     99: endProgram,
   };
 
-  const executeProgram = ({ memory, position, inputs, outputs }) => {
+  executeProgram = ({ memory, position, inputs, outputs }) => {
     const instruction = (memory[position] + '').split('');
     const opcode = Number.parseInt(
       [instruction.pop(), instruction.pop()].reverse().join('')
@@ -178,14 +187,16 @@ const runSequence = (memory, inputs) => {
     }
   };
 
-  const outputs = {};
+  run = () => {
+    const outputs = {};
 
-  let position = 0;
-  do {
-    position = executeProgram({ memory, position, inputs, outputs });
-  } while (position !== -1);
+    let position = 0;
+    do {
+      position = executeProgram({ memory, position, inputs, outputs });
+    } while (position !== -1);
 
-  return outputs;
+    return outputs;
+  };
 };
 
 module.exports = {
