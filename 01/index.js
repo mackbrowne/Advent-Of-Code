@@ -1,49 +1,22 @@
 const { parseNumbers } = require(`../utils/file`);
 const { test, endTest } = require(`../utils/test`);
-const { sumReducer } = require(`../utils/reducers`);
+const { sum, multiply } = require("../utils/reducers");
+const { findCombos } = require("../utils/list");
 
-const parseInput = file => parseNumbers(`${__dirname}/${file}`, '\n');
+const parseInput = (file) => parseNumbers(`${__dirname}/${file}`, "\n");
 
-/*  Iterate through list of pairs and find sum */
-const findSum = (input, sum, depth) => {
-  const numbers = parseInput(input);
+const test1 = parseInput("test1.txt");
+const input = parseInput("input.txt");
 
-  let result;
-  numbers.forEach((a, i) => {
-    numbers.forEach((b,j)=> {
-      if(j>i){
-        if(a + b === sum) result = a * b;
-      }
-    });
-  });
+const sum2020 = (combo) => sum(combo) === 2020;
 
-  return result;
-}
+const run = async () => {
+  test(multiply(await findCombos(test1, 2, sum2020)), 514579);
+  test(multiply(await findCombos(test1, 3, sum2020)), 241861950);
+  endTest();
 
-const findSum3 = (input, sum) => {
-  const numbers = parseInput(input);
+  console.log(`Part 1 - ${multiply(await findCombos(input, 2, sum2020))}`);
+  console.log(`Part 2 - ${multiply(await findCombos(input, 3, sum2020))}`);
+};
 
-  let result;
-  numbers.forEach((a, i) => {
-    numbers.forEach((b,j)=> {
-      numbers.forEach((c,k)=> {
-        if(j>i){
-          if(k>j) {
-            if(a + b + c === sum) result = a * b * c;
-          }
-        }
-      });
-    });
-  });
-
-  return result;
-}
-
-test(findSum('test1.txt', 2020), 514579);
-test(findSum3('test1.txt', 2020), 241861950);
-endTest();
-
-// ANSWER Part 1
-console.log(`Part 1 - ${findSum('input.txt', 2020)}`);
-console.log(`Part 2 - ${findSum3('input.txt', 2020)}`);
-
+run();
