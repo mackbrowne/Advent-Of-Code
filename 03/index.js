@@ -10,29 +10,31 @@ const ski = (lines, { x, y }) => {
   const TREE = "#";
   const HILL_WIDTH = lines[0].length;
 
-  let deltaX = 1,
-    deltaY = 1,
-    trees = 0;
+  const traverse = (deltaX, deltaY, trees) => {
+    let localDeltaX = deltaX % HILL_WIDTH;
 
-  do {
-    const hitTree = () => {
-      let localDeltaX = deltaX % HILL_WIDTH;
+    let localIndexX = localDeltaX - 1;
+    if (localDeltaX === 0) localIndexX = HILL_WIDTH - 1;
 
-      let localIndexX = localDeltaX - 1;
-      if (localDeltaX === 0) localIndexX = HILL_WIDTH - 1;
+    const localIndexY = deltaY - 1;
 
-      localIndexY = deltaY - 1;
-      // console.log(localIndexY, " ", localIndexX);
-      // console.log(lines[localIndexY][localIndexX]);
-      return lines[localIndexY][localIndexX] === TREE;
-    };
+    // console.log(localIndexY, " ", localIndexX);
+    // console.log(lines[localIndexY][localIndexX]);
+    const hitTree = lines[localIndexY][localIndexX] === TREE
+    if (hitTree) trees++;
 
-    if (hitTree()) trees++;
+    if (deltaY + y <= lines.length) {
+      return traverse(deltaX + x, deltaY + y, trees);
+    } else {
+      return trees;
+    }
+  };
 
-    deltaX += x;
-    deltaY += y;
-  } while (deltaY <= lines.length);
-  return trees;
+  let initDeltaX = 1,
+    initDeltaY = 1,
+    initTrees = 0;
+
+  return traverse(initDeltaX, initDeltaY, initTrees);
 };
 
 const part1 = { x: 3, y: 1 };
