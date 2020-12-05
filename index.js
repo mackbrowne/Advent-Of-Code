@@ -1,4 +1,4 @@
-const DAYS = ['01']
+const DAYS = ['01', '02', '03']
 
 const runDay = day => {
     console.log(`DAY ${day}\n`);
