@@ -21,22 +21,26 @@ const checkBingo = (board) => {
   const isBingo = (rowCol) =>
     rowCol.filter((item) => item === "X").length === rowCol.length;
 
-  for (let i = 0; i < SIZE; i++) {
+  for (let i = 0; i < SIZE; i += SIZE) {
+    console.log(i);
     const row = board[i];
     const col = board.map((row) => row[i]);
-
-    if (isBingo(row) | isBingo(col)) {
-      return true;
+    console.log(col);
+    if (isBingo(row) || isBingo(col)) {
+      console.log("BINGO");
+      //return true;
     }
   }
 
   return false;
 };
 
-const buildCalledNumbers = (calledNumbersLine) => calledNumbersLine.split(",");
+const part1 = (input) => {
+  const [calledNumbersLine, , ...boardLines] = input;
 
-const buildBoards = (boardLines) =>
-  boardLines.reduce(
+  const calledNumbers = calledNumbersLine.split(",");
+
+  const boards = boardLines.reduce(
     (acc, line) => {
       if (line.length > 0) {
         let lastBoard = acc.pop();
@@ -54,21 +58,21 @@ const buildBoards = (boardLines) =>
     [[]]
   );
 
-const playBingo = (input, bingoCallback) => {
-  const [calledNumbersLine, , ...boardLines] = input;
-
-  const calledNumbers = buildCalledNumbers(calledNumbersLine);
-
-  const boards = buildBoards(boardLines);
-
+  //play bingo
   try {
     calledNumbers.forEach((pickedNumber) => {
-      boards.forEach((board) => {
-        board.forEach((boardLine) => {
+      console.log(pickedNumber);
+      // console.log(boards);
+      boards.forEach((board, boardIndex) => {
+        // console.log(`board ${index + 1}`);
+        // console.log(board);
+        board.forEach((boardLine, lineIndex) => {
           let foundIndex = boardLine.indexOf(pickedNumber);
           if (foundIndex >= 0) {
             boardLine[foundIndex] = "X";
-            if (!!checkBingo(board)) bingoCallback(board, pickedNumber, boards);
+            if (!!checkBingo(board)) {
+              throw { board, lastPicked: pickedNumber };
+            }
           }
         });
       });
@@ -78,18 +82,7 @@ const playBingo = (input, bingoCallback) => {
   }
 };
 
-const part1 = (input) =>
-  playBingo(input, (board, lastPicked) => {
-    throw { board, lastPicked };
-  });
-
-const part2 = (input) => {
-  const done = [];
-  return playBingo(input, (board, lastPicked, boards) => {
-    if (done.indexOf(board) < 0) done.push(board);
-    if (done.length === boards.length) throw { board, lastPicked };
-  });
-};
+const part2 = (input) => {};
 
 const run = () => {
   const [boardScore, lastPicked] = part1(test1);
@@ -97,14 +90,14 @@ const run = () => {
   test(lastPicked, 24);
   test(multiply([boardScore, lastPicked]), 4512);
 
-  const [p2score, p2LastPicked] = part2(test1);
-  test(p2score, 148);
-  test(p2LastPicked, 13);
-  test(multiply([p2score, p2LastPicked]), 1924);
+  // const part2Result = part2(test1);
+  // test(part2Result[0], 23);
+  // test(part2Result[1], 10);
+  // test(part2Result[0] * part2Result[1], 230);
   endTest();
 
   console.log(`Part 1 - ${multiply(part1(input))}`);
-  console.log(`Part 2 - ${multiply(part2(input))}`);
+  // console.log(`Part 2 - ${multiply(part2(input))}`);
 };
 
 run();

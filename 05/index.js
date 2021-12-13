@@ -7,97 +7,60 @@ const parseInput = (file) => readFile(`${__dirname}/${file}`, "\n");
 const test1 = parseInput("test1.txt");
 const input = parseInput("input.txt");
 
-const score = (board) =>
-  sum(
-    board
-      .flat(2)
-      .filter((letter) => letter !== "X")
-      .map(Number)
-  );
+const parseInstructions = (input) =>
+  input.map((line) => line.split(" -> ").map((coord) => coord.split(",")));
+const buildGrid = (SIZE) =>
+  Array(SIZE+1)
+    .fill(0)
+    .map(() => Array(SIZE+1).fill(0));
 
-const checkBingo = (board) => {
-  const SIZE = board.length; //5
+const getMinMax = (set) => [Math.min(...set), Math.max(...set)];
 
-  const isBingo = (rowCol) =>
-    rowCol.filter((item) => item === "X").length === rowCol.length;
+const drawLines = (input, diagonal = false) => {
+  const instructions = parseInstructions(input);
 
-  for (let i = 0; i < SIZE; i += SIZE) {
-    console.log(i);
-    const row = board[i];
-    const col = board.map((row) => row[i]);
-    console.log(col);
-    if (isBingo(row) || isBingo(col)) {
-      console.log("BINGO");
-      //return true;
-    }
-  }
+  const SIZE = Math.max(...instructions.flat(3).map(Number));
+  const grid = buildGrid(SIZE);
+  
+  instructions.forEach(([from, to]) => {
+    const [fromX, fromY] = from;
+    const [toX, toY] = to;
 
-  return false;
-};
-
-const part1 = (input) => {
-  const [calledNumbersLine, , ...boardLines] = input;
-
-  const calledNumbers = calledNumbersLine.split(",");
-
-  const boards = boardLines.reduce(
-    (acc, line) => {
-      if (line.length > 0) {
-        let lastBoard = acc.pop();
-        const lineNumbers = line
-          .match(/\d+ */g)
-          .map((matchedLine) => matchedLine.trim());
-        lastBoard.push(lineNumbers);
-        acc.push(lastBoard);
-      } else {
-        acc.push(new Array());
+    if (fromX === toX) {
+      const [min, max] = getMinMax([Number(fromY), Number(toY)]);
+      for (let i = min; i <= max; i++) {
+        grid[i][Number(fromX)]++;
       }
-
-      return acc;
-    },
-    [[]]
-  );
-
-  //play bingo
-  try {
-    calledNumbers.forEach((pickedNumber) => {
-      console.log(pickedNumber);
-      // console.log(boards);
-      boards.forEach((board, boardIndex) => {
-        // console.log(`board ${index + 1}`);
-        // console.log(board);
-        board.forEach((boardLine, lineIndex) => {
-          let foundIndex = boardLine.indexOf(pickedNumber);
-          if (foundIndex >= 0) {
-            boardLine[foundIndex] = "X";
-            if (!!checkBingo(board)) {
-              throw { board, lastPicked: pickedNumber };
-            }
-          }
-        });
-      });
-    });
-  } catch ({ board, lastPicked }) {
-    return [score(board), Number(lastPicked)];
-  }
+    } else if (fromY === toY) {
+      const [min, max] = getMinMax([Number(fromX), Number(toX)]);
+      for (let i = min; i <= max; i++) {
+        grid[Number(fromY)][i]++;
+      }
+    } else if(diagonal) {
+      const xDirection = Number(toX) - Number(fromX) > 0 ? 1 : -1;
+      const yDirection = Number(toY) - Number(fromY) > 0 ? 1 : -1;
+      const X = Number(fromX);
+      const Y = Number(fromY);
+      const diff = Math.abs(Number(fromX) - Number(toX));
+      for (let i = 0; i <= diff; i++) {
+        grid[Y + (i * yDirection)][X + (i * xDirection)]++;
+      }
+    }
+  });
+  return grid.flat(2).filter((item) => Number(item) >= 2).length;
 };
 
-const part2 = (input) => {};
+const part1 = drawLines;
+
+const part2 = (input) => drawLines(input, true);
 
 const run = () => {
-  const [boardScore, lastPicked] = part1(test1);
-  test(boardScore, 188);
-  test(lastPicked, 24);
-  test(multiply([boardScore, lastPicked]), 4512);
-
-  // const part2Result = part2(test1);
-  // test(part2Result[0], 23);
-  // test(part2Result[1], 10);
-  // test(part2Result[0] * part2Result[1], 230);
+  test(part1(test1), 5);
+  test(part2(test1), 12);
   endTest();
 
-  console.log(`Part 1 - ${multiply(part1(input))}`);
-  // console.log(`Part 2 - ${multiply(part2(input))}`);
+  console.log(`Part 1 - ${part1(input)}`);
+  console.log(`Part 2 - ${part2(input)}`);
 };
 
 run();
